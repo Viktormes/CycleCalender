@@ -12,7 +12,6 @@ import java.time.LocalTime;
 @Table(name = "calender_event")
 public class CalenderEvent extends PanacheEntity {
 
-
     @Column(name = "id")
     @JsonProperty("id")
     private Long id;
