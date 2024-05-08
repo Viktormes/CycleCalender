@@ -28,6 +28,12 @@ public class UserResource {
         return Response.ok(user).build();
     }
 
+    @GET
+    @Path("/all")
+    public Response getAllUsers() {
+        return Response.ok(userService.getAllUsers()).build();
+    }
+
     @POST
     @Transactional
     public Response addUser(UserDTO userDTO) {

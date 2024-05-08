@@ -21,6 +21,7 @@ public class CalenderEventResource {
     CalenderEventService calenderEventService;
 
     @GET
+    @Path("/all")
     public List<CalenderEvent> getAll() {
         return calenderEventService.getAllCalenderEvents();
     }

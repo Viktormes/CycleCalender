@@ -2,6 +2,7 @@ package org.example.services;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
 import org.example.dto.UserDTO;
 import org.example.entity.User;
@@ -9,12 +10,14 @@ import org.example.repository.UserRepository;
 
 import java.util.List;
 
+
 @ApplicationScoped
 public class UserService {
 
     @Inject
     UserRepository userRepository;
 
+    @Transactional
     public User addUser(UserDTO userDTO) {
 
         if(userDTO == null) {
@@ -27,6 +30,10 @@ public class UserService {
 
         userRepository.persist(user);
         return user;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.listAll();
     }
 
     public User getUser(Long id) {
