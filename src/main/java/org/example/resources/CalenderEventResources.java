@@ -4,9 +4,12 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 import org.example.dto.AddCalenderEventDTO;
 import org.example.entity.CalenderEvent;
 import org.example.repository.CalenderEventRepository;
+import org.example.services.CalenderEventService;
 
 import java.util.List;
 
@@ -16,47 +19,43 @@ import java.util.List;
 public class CalenderEventResources {
 
     @Inject
-    CalenderEventRepository calenderEventRepository;
+    CalenderEventService calenderEventService;
 
     @GET
     public List<CalenderEvent> getAll() {
-        return calenderEventRepository.listAll();
+        return calenderEventService.getAllCalenderEvents();
+    }
+
+    @GET
+    @Path("/{id}")
+    public CalenderEvent get(@PathParam("id") Long id) {
+       return calenderEventService.getCalenderEventById(id);
     }
 
     @POST
     @Transactional
-    public void add(AddCalenderEventDTO calenderEventDTO) {
+    public Response add(AddCalenderEventDTO calenderEventDTO) {
+        CalenderEvent calenderEvent = calenderEventService.addCalenderEvent(calenderEventDTO);
+        UriBuilder uriBuilder = UriBuilder.fromResource(CalenderEventResources.class).path(calenderEvent.getId().toString());
+        return Response.created(uriBuilder.build()).build();
+    }
 
-        if(calenderEventDTO.getTitle() == null || calenderEventDTO.getTitle().isEmpty()) {
-            throw new WebApplicationException("CalenderEvent title was not set on request.", 400);
-        }
-        if(calenderEventDTO.getDescription() == null || calenderEventDTO.getDescription().isEmpty()) {
-            throw new WebApplicationException("CalenderEvent description was not set on request.", 400);
-        }
-        if(calenderEventDTO.getStartDate() == null) {
-            throw new WebApplicationException("CalenderEvent start date was not set on request.", 400);
-        }
-        if(calenderEventDTO.getEndDate() == null) {
-            throw new WebApplicationException("CalenderEvent end date was not set on request.", 400);
-        }
-
-        CalenderEvent calenderEvent = new CalenderEvent();
-        calenderEvent.setTitle(calenderEventDTO.getTitle());
-        calenderEvent.setDescription(calenderEventDTO.getDescription());
-        calenderEvent.setStartTime(calenderEventDTO.getStartDate());
-        calenderEvent.setEndTime(calenderEventDTO.getEndDate());
-
-        calenderEventRepository.persist(calenderEvent);
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response update(@PathParam("id") Long id, AddCalenderEventDTO calenderEventDTO) {
+        CalenderEvent calenderEvent = calenderEventService.updateCalenderEvent(id, calenderEventDTO);
+        return Response.ok(calenderEvent).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(@PathParam("id") String id) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response delete(@PathParam("id") Long id) {
 
-        if(id == null || id.isEmpty()) {
-            throw new WebApplicationException("Id was not set on request.", 400);
-        }
-        calenderEventRepository.deleteById(Long.valueOf(id));
+        CalenderEvent calenderEvent = calenderEventService.getCalenderEventById(id);
+        calenderEventService.removeCalenderEvent(calenderEvent.getId());
+        return Response.ok("Deleted Calender event with id: " + id).build();
     }
 }
