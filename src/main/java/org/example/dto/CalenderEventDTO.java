@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalTime;
 
-public class AddCalenderEventDTO {
+public class CalenderEventDTO {
 
     @JsonProperty("title")
     private String title;
@@ -15,10 +15,10 @@ public class AddCalenderEventDTO {
     @JsonProperty("end_time")
     private LocalTime endDate;
 
-    public AddCalenderEventDTO() {
+    public CalenderEventDTO() {
     }
 
-    public AddCalenderEventDTO(String title, String description, LocalTime startDate, LocalTime endDate) {
+    public CalenderEventDTO(String title, String description, LocalTime startDate, LocalTime endDate) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;

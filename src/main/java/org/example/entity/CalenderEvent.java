@@ -1,15 +1,19 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "calender_event")
+@JsonPropertyOrder({"id", "title", "description", "start_time", "end_time", "user"})
 public class CalenderEvent extends PanacheEntity {
 
     @Column(name = "id")
@@ -31,6 +35,11 @@ public class CalenderEvent extends PanacheEntity {
     @Column(name = "end_time")
     @JsonProperty("end_time")
     public LocalTime endTime;
+
+    @ManyToOne
+    @JsonProperty("user")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private User user;
 
     public CalenderEvent() {}
 
@@ -72,5 +81,13 @@ public class CalenderEvent extends PanacheEntity {
 
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

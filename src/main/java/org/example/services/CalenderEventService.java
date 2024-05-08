@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
-import org.example.dto.AddCalenderEventDTO;
+import org.example.dto.CalenderEventDTO;
 import org.example.entity.CalenderEvent;
 import org.example.repository.CalenderEventRepository;
 
@@ -18,7 +18,7 @@ public class CalenderEventService {
 
 
     @Transactional
-    public CalenderEvent addCalenderEvent(AddCalenderEventDTO calenderEventDTO) {
+    public CalenderEvent addCalenderEvent(CalenderEventDTO calenderEventDTO) {
 
         if(calenderEventDTO == null) {
             throw new IllegalArgumentException("CalenderEventDTO cannot be null");
@@ -34,7 +34,7 @@ public class CalenderEventService {
     }
 
     @Transactional
-    public CalenderEvent updateCalenderEvent(Long id, AddCalenderEventDTO calenderEventDTO) {
+    public CalenderEvent updateCalenderEvent(Long id, CalenderEventDTO calenderEventDTO) {
 
         if(id == null) {
             throw new WebApplicationException("Id cannot be null", 400);
